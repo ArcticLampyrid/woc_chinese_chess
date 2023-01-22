@@ -20,7 +20,6 @@ class Network : public QObject{
     };
     QNetworkAccessManager manager;
     QString username;
-    QString oauth;
     unsigned timeout;
     QTimer timer;
     QNetworkRequest* request = nullptr; //长轮询请求
@@ -59,21 +58,19 @@ private:
             timer.start();
         }
         manager.get(*request);
-        connect(&manager, &QNetworkAccessManager::finished, this, &Network::onResponse);
     }
     inline QNetworkRequest* setRequest(RequestType type, QString form) {
         QNetworkRequest* request;
         if (type >= RequestType::FIND) {
             auto usr = QUrl::toPercentEncoding(username);
             request = new QNetworkRequest(QUrl(url[(int)type] + form + QString("&usr=%1").arg(usr)));
-            request->setAttribute(QNetworkRequest::Attribute::AuthenticationReuseAttribute, oauth);
-            if (type == RequestType::FIND)
+            if (type == RequestType::CONTINUE)
                 this->request = request;
         } else
             request = new QNetworkRequest(QUrl(url[(int)type] + form));
         return request;
     }
-    inline const RequestType str2enum(const QString& str) {
+    inline RequestType str2enum(const QString& str) {
         if (str.toLower() == "signup")
             return RequestType::SIGNUP;
         if (str.toLower() == "login")

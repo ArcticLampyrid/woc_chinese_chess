@@ -7,52 +7,41 @@
 
 Network::Network() {
     readSettings();
+    connect(&manager, &QNetworkAccessManager::finished, this, &Network::onResponse);
 }
 
 void Network::readSettings() {
-    try {
-        QFile file(SETTING_FILENAME);
-        if (!file.exists() || !file.open(QFile::OpenModeFlag::ReadOnly))
-            throw Exception("Data is broken!", 1);
-        QJsonParseError parser;
-        QJsonDocument data = QJsonDocument::fromJson(file.readAll(), &parser);
-        if (parser.error != QJsonParseError::NoError || data.isEmpty() || !data.isObject())
-            throw Exception("Data is broken!", 1);
-        auto json_object = data.object();
-        QString host;
-        if (json_object.contains("timeout"))
-            timeout = json_object["timeout"].toInt();
-        if (json_object.contains("host"))
-            host = json_object["host"].toString();
-        else
-            throw Exception("Data is broken!", 1);
-        if (json_object.contains("login"))
-            url[(int)RequestType::LOGIN] = host + json_object["login"].toString();
-        else
-            throw Exception("Data is broken!", 1);
-        if (json_object.contains("signup"))
-            url[(int)RequestType::SIGNUP] = host + json_object["signup"].toString();
-        else
-            throw Exception("Data is broken!", 1);
-        if (json_object.contains("message"))
-            url[(int)RequestType::MESSAGE] = host + json_object["message"].toString();
-        else
-            throw Exception("Data is broken!", 1);
-        if (json_object.contains("move"))
-            url[(int)RequestType::MOVE] = host + json_object["move"].toString();
-        else
-            throw Exception("Data is broken!", 1);
-        if (json_object.contains("main"))
-            url[(int)RequestType::CONTINUE] = host + json_object["main"].toString();
-        else
-            throw Exception("Data is broken!", 1);
-    } catch(Exception e) {
-        e.process();
+    QFile file(SETTING_FILENAME);
+    if (!file.exists() || !file.open(QFile::OpenModeFlag::ReadOnly))
+        throw Exception("Data is broken!", 1);
+    QJsonParseError parser;
+    QJsonDocument data = QJsonDocument::fromJson(file.readAll(), &parser);
+    if (parser.error != QJsonParseError::NoError || data.isEmpty() || !data.isObject())
+        throw Exception("Data is broken!", 1);
+    auto json_object = data.object();
+    QString host;
+    if (json_object.contains("timeout"))
+        timeout = json_object["timeout"].toInt();
+    else
+        throw Exception("Data is broken!", 1);
+    if (json_object.contains("host"))
+        host = json_object["host"].toString();
+    else
+        throw Exception("Data is broken!", 1);
+    unsigned count = 0;
+    for (const auto& i : json_object.keys()) {
+        auto key = str2enum(i);
+        if (key != RequestType::UNEXPECTED) {
+            url[(int)key] = host + json_object[i].toString();
+            count++;
+        }
     }
+    if (count != 6)
+        throw Exception("Data is broken!", 1);
 }
 
 void Network::onMove(const std::pair<int, int> from, const std::pair<int, int> to) {
-    send(setRequest(RequestType::MOVE, QString("?x1=%1&y1=%2&x2=%3&y2=%4").arg(from.first).arg(from.second).arg(to.first).arg(to.second)));
+    send(setRequest(RequestType::MOVE, QString("?X1=%1&Y1=%2&X2=%3&Y2=%4").arg(from.first).arg(from.second).arg(to.first).arg(to.second)));
 }
 
 void Network::onResponse(QNetworkReply* reply) {
@@ -62,7 +51,6 @@ void Network::onResponse(QNetworkReply* reply) {
         auto code = reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toInt();
         if (code / 100 != 2)    //2xx表示服务器正常响应
             error();
-        oauth = reply->attribute(QNetworkRequest::AuthenticationReuseAttribute).toString();
         auto data = reply->readAll();
         QJsonParseError parser;
         auto json = QJsonDocument::fromJson(data, &parser);
@@ -71,11 +59,8 @@ void Network::onResponse(QNetworkReply* reply) {
         auto json_object = json.object();
         if (!json_object.contains("Type"))
             error();
-        //聊天功能
-        //if (json_object.contains("Message"))
-        //
         auto type = str2enum(json_object["Type"].toString());        
-        if (!json_object["Sucess"].toBool()) {
+        if (!json_object["Success"].toBool()) {
             emit failure(json_object["ErrMessage"].toString());
             if (type == RequestType::FIND)
                 findOpp(true);
@@ -98,9 +83,10 @@ void Network::onResponse(QNetworkReply* reply) {
         case RequestType::SIGNUP:{
 
         }break;
-        case RequestType::MESSAGE:{
+        //聊天功能
+        //case RequestType::MESSAGE:{
 
-        }break;
+        //}break;
         case RequestType::MOVE:{
 
         }break;

@@ -1,4 +1,5 @@
 #include "loginui.h"
+#include "dialogui.h"
 #include "network.h"
 #include "mainui.h"
 
@@ -21,11 +22,16 @@ LoginUI::LoginUI()
 
     userTxt->setMaxLength(20);
     passwdTxt->setEchoMode(QLineEdit::Password);
+
+    try {
     //Add your own code here:
     /////////////////////////
 
 
     /////////////////////////
+    } catch(Exception e) {
+        e.process();
+    }
 }
 
 void LoginUI::onLogin() {
@@ -41,6 +47,8 @@ void LoginUI::loginSuccess() {
     hide();
     MainUI* ui = new MainUI;
     ui->show();
+    auto popup = new DialogUI;
+    popup->show();
     close();
 }
 

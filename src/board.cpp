@@ -20,6 +20,7 @@ void Board::judgeStatus() {
     //Add your own code below
     //////////////////////////
 
+
     //////////////////////////
 }
 
@@ -41,6 +42,14 @@ void Board::onSetup(Cell** cells) {
     setPieces(factory);
     for (const auto& [pos, piece] : pieces)
         this->cells[pos]->change(piece);
+    if (side()) 
+        your_turn = true;
+
+    //Add your own code below
+    //////////////////////////
+
+
+    //////////////////////////
 }
 
 void Board::setPieces(const std::map<Type, Constructor> & factory) {
@@ -80,7 +89,7 @@ void Board::setPieces(const std::map<Type, Constructor> & factory) {
     };
 
     for (const auto& [pos, type] : piece_list)
-        pieces.emplace(pos, factory.at(removeSide(type))(pos.first, pos.second, side() && getSide(type)));
+        pieces.emplace(pos, factory.at(removeSide(type))(pos.first, pos.second, side() == getSide(type)));
 }
 
 void Board::move(const Pos from, const Pos to) {
@@ -90,6 +99,8 @@ void Board::move(const Pos from, const Pos to) {
     cell_from->change(nullptr);
     auto& cell_to = cells.at(to);
     cell_to->change(piece);
+    pieces.emplace(to, piece);
+    pieces.erase(from);
     judgeStatus();
 }
 
@@ -104,17 +115,17 @@ void Board::onClick(int x, int y) {
         if (piece->side() == side()) {
             selected = piece;
             cells.at(pos)->select();
-            moved = true;
-            your_turn = false;
-            move(selected->pos(), pos);
             return;
         }
     }
     if (!selected)
         return;
     if (selected->isValidMove(x, y)) {
-        selected = nullptr;
         cells.at(pos)->fineMove();
+        move(selected->pos(), pos);
+        moved = true;
+        your_turn = false;
+        selected = nullptr;
     } else
         cells.at(pos)->wrongMove();
 }
@@ -124,4 +135,12 @@ void Board::onMove(const Pos from, const Pos to) {
     your_turn = true;
     moved = false;
     move(from, to);
+}
+
+const std::list<std::pair<Pos, Piece::PieceType>> Board::find(int x, int y, int side) const {
+    //Add your own code here
+    //////////////////////////
+
+
+    //////////////////////////
 }

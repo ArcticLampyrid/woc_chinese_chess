@@ -1,7 +1,6 @@
 #include "mainui.h"
 
 #include "cell.h"
-#include "dialogui.h"
 
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -71,12 +70,9 @@ MainUI::MainUI() : QDialog(),
     */
 
     setLayout(layout);
-
     //Add your own code here:
     /////////////////////////
 
 
     /////////////////////////
-    auto popup = new DialogUI;
-    popup->show();
 }

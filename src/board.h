@@ -56,16 +56,16 @@ private:
     mutable bool SIDE;          //哪一方？
     std::mutex lock;
 public:
-    inline const bool isChecked() const {
+    inline bool isChecked() const {
         return checked;
     }
-    inline const bool isYourTurn() const {
+    inline bool isYourTurn() const {
         return your_turn;
     }
-    inline const bool isMoved() const {
+    inline bool isMoved() const {
         return moved;
     }
-    inline const bool side() const {
+    inline bool side() const {
         return SIDE;
     }
 private:

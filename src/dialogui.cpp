@@ -7,7 +7,7 @@
 
 DialogUI::DialogUI()
     : QDialog(), layout(new QVBoxLayout),
-      start(new QPushButton("开始游戏")), exit(new QPushButton("推出游戏")),
+      start(new QPushButton("开始游戏")), exit(new QPushButton("退出游戏")),
       pending(new QLabel("请耐心等待，正在匹配玩家……"))
 {
     layout->addWidget(start);

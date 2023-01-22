@@ -1,6 +1,7 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+#include <cmath>
 #include <list>
 #include <map>
 
@@ -33,27 +34,27 @@ public:
 private:
     static const std::map<PieceType, wchar_t> dict;
 public:
-    static inline const wchar_t convert(PieceType type) {
+    static inline wchar_t convert(PieceType type) {
         return dict.at(type);
     }
-    inline const wchar_t text() const {
+    inline wchar_t text() const {
         return convert(type);
     }
     inline void move(int x, int y) const {  //请勿修改
         this->x = x;
         this->y = y;
     }
-    inline const bool side() const {
+    inline bool side() const {
         return type > PieceType::NONE;
     }
     inline const Pos pos() const {
         return std::make_pair(x, y);
     }
 private:
-    const bool noThreat(int x, int y) const;
-    virtual const bool isBasicMove(int x, int y) const = 0;
+    bool noThreat(int x, int y) const;
+    virtual bool isBasicMove(int x, int y) const = 0;
 public:
-    virtual const bool isValidMove(int x, int y) const = 0;
+    virtual bool isValidMove(int x, int y) const = 0;
     virtual const std::list<Pos> getPossibleMoves() const = 0;
 
     Piece(int x, int y, PieceType type) : x(x), y(y), type(type) {}
