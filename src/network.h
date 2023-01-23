@@ -38,6 +38,7 @@ public:
         auto usr = QUrl::toPercentEncoding(username);
         auto pwd = QUrl::toPercentEncoding(passwd);
         send(setRequest(RequestType::LOGIN, QString("?usr=%1&pwd=%2").arg(usr).arg(pwd)));
+        this->username = username;
     }
     inline void signup(QString username, QString passwd) {
         auto usr = QUrl::toPercentEncoding(username);

@@ -14,11 +14,11 @@ DialogUI::DialogUI()
     layout->addWidget(exit);
     layout->addWidget(pending);
     setLayout(layout);
-    //Add your own code below
-    //////////////////////////
-
-
-    //////////////////////////
+    connect(start, &QPushButton::clicked, this, &DialogUI::onStart);
+    connect(exit, &QPushButton::clicked, this, &DialogUI::onExit);
+    connect(Network::getInstance(), &Network::findOK, this, &DialogUI::onFind);
+    // FIXME bind onWin
+    connect(Network::getInstance(), &Network::failure, this, &DialogUI::onFailure);
     pending->hide();
 }
 
