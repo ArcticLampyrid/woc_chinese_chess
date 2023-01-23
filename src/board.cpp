@@ -138,9 +138,6 @@ void Board::onMove(const Pos from, const Pos to) {
 }
 
 const std::list<std::pair<Pos, Piece::PieceType>> Board::find(int x, int y, int side) const {
-    //Add your own code here
-    //////////////////////////
-
-
-    //////////////////////////
+    // FIXME
+    return std::list<std::pair<Pos, Piece::PieceType>>();
 }
