@@ -24,11 +24,11 @@ LoginUI::LoginUI()
     passwdTxt->setEchoMode(QLineEdit::Password);
 
     try {
-    //Add your own code here:
-    /////////////////////////
-
-
-    /////////////////////////
+        connect(login, &QPushButton::clicked, this, &LoginUI::onLogin);
+        connect(signup, &QPushButton::clicked, this, &LoginUI::onSignup);
+        connect(Network::getInstance(), &Network::loginOK, this, &LoginUI::loginSuccess);
+        connect(Network::getInstance(), &Network::signupOK, this, &LoginUI::signupSuccess);
+        connect(Network::getInstance(), &Network::failure, this, &LoginUI::onFailure);
     } catch(Exception e) {
         e.process();
     }

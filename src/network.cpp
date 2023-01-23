@@ -75,14 +75,12 @@ void Network::onResponse(QNetworkReply* reply) {
             } else
                 error();
             break;
-        //Write your code below:
-        ////////////////////////
-        case RequestType::LOGIN:{
-
-        }break;
-        case RequestType::SIGNUP:{
-
-        }break;
+        case RequestType::LOGIN:
+            emit loginOK();
+            break;
+        case RequestType::SIGNUP:
+            emit signupOK();
+            break;
         //聊天功能
         //case RequestType::MESSAGE:{
 
