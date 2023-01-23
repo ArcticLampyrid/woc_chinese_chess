@@ -17,11 +17,12 @@
 1. 重写 `class Piece` 派生类中的 `bool isBasicMove(int x, int y)` 函数实现对派生类棋子基本走法的限制约束。
 2. 重写 `class Piece` 派生类中的 `isValidMove (int x, int y)` 函数实现对派生类棋子走法是否可行的判断。
 3. 在1、2的基础上，重写 `class Piece` 派生类中 `getBasicMoves()` 函数，实现获得该子所有可能走法的功能。
-4. 用 lambda 表达式为每一个 `class Piece` 的派生类实现一个工厂函数。
-5. 实现 `class Piece` 中 `bool noThreat(int x, int y)` 判断走棋后是否处于将军状态。
-6. 正确虚析构和使用 `std::shared_ptr`、`std::weak_ptr` 使得吃子自动析构。
-7. 合理配置信号槽使得网络、数据、界面三者解耦，并使得UI正确响应。
-8. 使用 Qt 网络库根据 API 正确处理 GET 请求的响应。
+4. 为 `class board` 实现 `find` 函数。其中，`side` 筛选棋子颜色，`-1` 不筛选；`x` 筛选棋子横坐标，`-1` 不筛选；`y` 筛选棋子纵坐标，`-1` 不筛选。
+5. 用 lambda 表达式为每一个 `class Piece` 的派生类实现一个工厂函数。
+6. 实现 `class Piece` 中 `bool noThreat(int x, int y)` 判断走棋后是否处于将军状态。
+7. 正确虚析构和使用 `std::shared_ptr`、`std::weak_ptr` 使得吃子自动析构。
+8. 合理配置信号槽使得网络、数据、界面三者解耦，并使得UI正确响应。
+9. 使用 Qt 网络库根据 API 正确处理 GET 请求的响应。
 
 #### （2）进阶任务（选做）
 1. 学习和使用 qss 装点界面。
