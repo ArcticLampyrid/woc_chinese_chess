@@ -5,6 +5,8 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
+#include "network.h"
+#include "board.h"
 
 MainUI::MainUI() : QDialog(),
     layout(new QVBoxLayout), boardLayout(new QGridLayout),
@@ -72,7 +74,10 @@ MainUI::MainUI() : QDialog(),
     setLayout(layout);
     //Add your own code here:
     /////////////////////////
-
+    connect(Network::getInstance(), &Network::findOK, this, &MainUI::onFind);
+    connect(Network::getInstance(), &Network::move, Board::getBoard(), &Board::onMove);
+    connect(Board::getBoard(), &Board::pieceMoved, Network::getInstance(), &Network::onMove);
+    connect(this, &MainUI::setup, Board::getBoard(), &Board::onSetup);
 
     /////////////////////////
 }

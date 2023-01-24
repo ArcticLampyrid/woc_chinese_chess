@@ -85,9 +85,18 @@ void Network::onResponse(QNetworkReply* reply) {
         //case RequestType::MESSAGE:{
 
         //}break;
-        case RequestType::MOVE:{
-
-        }break;
+        case RequestType::MOVE:
+            int x1, y1, x2, y2;
+            try {
+                x1 = json_object["X1"].toInt();
+                y1 = json_object["Y1"].toInt();
+                x2 = json_object["X2"].toInt();
+                y2 = json_object["Y2"].toInt();
+            } catch (...) {
+                error();
+            }
+            emit move(Pos(x1, y1), Pos(x2, y2));
+            break;
         }
         ////////////////////////
         if (code == 201)    //长轮询

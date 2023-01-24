@@ -1,5 +1,7 @@
 #include "board.h"
 #include "algorithms.h"
+#include "network.h"
+#include "jiang_shuai_piece.h"
 
 using Type = Piece::PieceType;
 
@@ -12,14 +14,13 @@ Board::Board() {
 }
 
 void Board::judgeStatus() {
-    checked = Algorithms::isCheck(side());
-    if (Algorithms::isStalemate(side()))
-        return emit win(side());
-    if (Algorithms::isStalemate(!side()))
-        return emit win(!side());
+    //checked = Algorithms::isCheck(side());
+    //if (Algorithms::isStalemate(side()))
+    //    return emit win(side());
+    //if (Algorithms::isStalemate(!side()))
+    //    return emit win(!side());
     //Add your own code below
     //////////////////////////
-
 
     //////////////////////////
 }
@@ -28,10 +29,11 @@ void Board::onSetup(Cell** cells) {
     for (int i = 0; i < 12 * 9; i++) {
         auto& cell = cells[i];
         this->cells.emplace(std::piecewise_construct, std::tuple(cell->x, cell->y), std::tuple(cell));
+        connect(cell, &Cell::click, this, &Board::onClick);
     }
     std::map<Type, Constructor> factory = {
         //请将nullptr替换为'new ClassName(x, y, side)'，请正确设置派生类构造函数参数
-        { Type::JIANG_SHUAI, [](int x, int y, bool side)->const Piece* { return nullptr; } },
+        { Type::JIANG_SHUAI, [](int x, int y, bool side)->const Piece* { return new JiangShuaiPiece(x, y, side); } },
         { Type::SHI, [](int x, int y, bool side)->const Piece* { return nullptr; } },
         { Type::XIANG, [](int x, int y, bool side)->const Piece* { return nullptr; } },
         { Type::MA, [](int x, int y, bool side)->const Piece* { return nullptr; } },
@@ -122,7 +124,9 @@ void Board::onClick(int x, int y) {
         return;
     if (selected->isValidMove(x, y)) {
         cells.at(pos)->fineMove();
-        move(selected->pos(), pos);
+        auto originPos = selected->pos();
+        move(originPos, pos);
+        emit pieceMoved(originPos, pos);
         moved = true;
         your_turn = false;
         selected = nullptr;

@@ -9,6 +9,7 @@ CONFIG += c++17
 SOURCES += \
     cell.cpp \
     dialogui.cpp \
+    jiang_shuai_piece.cpp \
     loginui.cpp \
     main.cpp \
     board.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
     cell.h \
     dialogui.h \
     exception.h \
+    jiang_shuai_piece.h \
     loginui.h \
     mainui.h \
     network.h \

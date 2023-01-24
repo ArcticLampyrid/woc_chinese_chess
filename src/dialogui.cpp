@@ -17,7 +17,7 @@ DialogUI::DialogUI()
     connect(start, &QPushButton::clicked, this, &DialogUI::onStart);
     connect(exit, &QPushButton::clicked, this, &DialogUI::onExit);
     connect(Network::getInstance(), &Network::findOK, this, &DialogUI::onFind);
-    // FIXME bind onWin
+    connect(Board::getBoard(), &Board::win, this, &DialogUI::onWin);
     connect(Network::getInstance(), &Network::failure, this, &DialogUI::onFailure);
     pending->hide();
 }

@@ -19,7 +19,7 @@ private:
         style.setColor(QPalette::Button, color);
         setPalette(style);
     }
-    inline void setText(const QColor& color) {
+    inline void setForeground(const QColor& color) {
         QPalette style(palette());
         style.setColor(QPalette::ButtonText, color);
         setPalette(style);
@@ -31,6 +31,10 @@ private slots:
         else
             setBackground(Qt::lightGray);
     }
+    void onClicked()
+    {
+        emit click(this->x, this->y);
+    }
 public:
     const int x, y;
     Cell(int x, int y);
@@ -38,14 +42,15 @@ public:
     inline void change(Piece const* piece = nullptr) {
         if (!piece) {
             setText("+");
+            setForeground(Qt::black);
             fade();
             return;
         }
         setText(QString(piece->text()));
         if (piece->side())
-            setText(Qt::red);
+            setForeground(Qt::red);
         else
-            setText(Qt::black);
+            setForeground(Qt::black);
     }
     inline void select() {
         if (chosen)

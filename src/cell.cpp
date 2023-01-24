@@ -10,7 +10,6 @@ Cell::Cell(int x, int y) : QPushButton("+"), x(x), y(y)
     setAutoFillBackground(true);
     //Add your own code below
     //////////////////////////
-
-
+    connect(this, &QPushButton::clicked, this, &Cell::onClicked);
     //////////////////////////
 }

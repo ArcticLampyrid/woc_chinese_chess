@@ -69,4 +69,8 @@ inline bool getSide(Piece::PieceType type) {
     return type > Piece::PieceType::NONE;
 }
 
+inline Piece::PieceType setSide(Piece::PieceType type, bool side) {
+    return (Piece::PieceType)(side ? std::abs((int)type) : -std::abs((int)type));
+}
+
 #endif // PIECE_H
