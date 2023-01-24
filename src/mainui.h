@@ -13,8 +13,8 @@ class MainUI : public QDialog
 
     QVBoxLayout* layout;
     QGridLayout* boardLayout;
-    QLabel *h[8 * 12], *v1[9 * 5], *v2[9 * 5], *l[8], *chu, *han;
-    Cell* cells[9 * 12];
+    QLabel *h[8 * 10], *v1[9 * 4], *v2[9 * 4], *l[8], *chu, *han;
+    Cell* cells[9 * 10];
 signals:
     void setup(Cell**);
 public slots:

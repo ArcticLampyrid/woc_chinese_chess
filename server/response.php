@@ -57,8 +57,8 @@ class Move_Response extends Continue_Response {
 
     public function fillWith(array $info): void {
         $this->X1 = 10 - $info['X1'];
-        $this->Y1 = 13 - $info['Y1'];
+        $this->Y1 = 11 - $info['Y1'];
         $this->X2 = 10 - $info['X2'];
-        $this->Y2 = 13 - $info['Y2'];
+        $this->Y2 = 11 - $info['Y2'];
     }
 }

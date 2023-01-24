@@ -54,7 +54,10 @@ private:
     bool noThreat(int x, int y) const;
     virtual bool isBasicMove(int x, int y) const = 0;
 public:
-    virtual bool isValidMove(int x, int y) const = 0;
+    virtual bool isValidMove(int x, int y) const {
+        if (isBasicMove(x, y) && noThreat(x, y))
+            return true;
+    }
     virtual const std::list<Pos> getPossibleMoves() const = 0;
 
     Piece(int x, int y, PieceType type) : x(x), y(y), type(type) {}

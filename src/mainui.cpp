@@ -24,8 +24,8 @@ MainUI::MainUI() : QDialog(),
         boardLayout->addWidget(i, count / 9 * 2 + 1, count % 9 * 2, Qt::AlignCenter);
         count++;
     }
-    boardLayout->addWidget(chu, 11, 0, 1, 8, Qt::AlignCenter);
-    boardLayout->addWidget(han, 11, 10, 1, 8, Qt::AlignCenter);
+    boardLayout->addWidget(chu, 9, 0, 1, 8, Qt::AlignCenter);
+    boardLayout->addWidget(han, 9, 10, 1, 8, Qt::AlignCenter);
     for (auto& i : v2) {
         i = new QLabel("|");
         boardLayout->addWidget(i, count / 9 * 2 + 3, count % 9 * 2, Qt::AlignCenter);
@@ -33,7 +33,7 @@ MainUI::MainUI() : QDialog(),
     }
     count = 0;
     for (auto& i : cells) {
-        i = new Cell(count% 9 + 1, 12 - count / 9);
+        i = new Cell(count% 9 + 1, 10 - count / 9);
         boardLayout->addWidget(i, count / 9 * 2, count % 9 * 2);
         count++;
     }
@@ -46,13 +46,13 @@ MainUI::MainUI() : QDialog(),
     l[3] = new QLabel("\\");
     boardLayout->addWidget(l[3], 3, 9, Qt::AlignCenter);
     l[0] = new QLabel("\\");
-    boardLayout->addWidget(l[0], 19, 7, Qt::AlignCenter);
+    boardLayout->addWidget(l[0], 15, 7, Qt::AlignCenter);
     l[1] = new QLabel("/");
-    boardLayout->addWidget(l[1], 19, 9, Qt::AlignCenter);
+    boardLayout->addWidget(l[1], 15, 9, Qt::AlignCenter);
     l[6] = new QLabel("/");
-    boardLayout->addWidget(l[6], 21, 7, Qt::AlignCenter);
+    boardLayout->addWidget(l[6], 17, 7, Qt::AlignCenter);
     l[7] = new QLabel("\\");
-    boardLayout->addWidget(l[7], 21, 9, Qt::AlignCenter);
+    boardLayout->addWidget(l[7], 17, 9, Qt::AlignCenter);
 
     layout->addLayout(boardLayout);
 
