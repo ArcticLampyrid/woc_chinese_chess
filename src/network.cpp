@@ -81,10 +81,9 @@ void Network::onResponse(QNetworkReply* reply) {
         case RequestType::SIGNUP:
             emit signupOK();
             break;
-        //聊天功能
-        //case RequestType::MESSAGE:{
-
-        //}break;
+        case RequestType::MESSAGE:
+            emit message(json_object["Message"].toString());
+            break;
         case RequestType::MOVE:
             int x1, y1, x2, y2;
             try {
@@ -104,4 +103,8 @@ void Network::onResponse(QNetworkReply* reply) {
     } catch (Exception e) {
         e.process();
     }
+}
+
+void Network::onMessageSent(const QString message) {
+    send(setRequest(RequestType::MESSAGE, QString("?message=%1").arg(QUrl::toPercentEncoding(message))));
 }

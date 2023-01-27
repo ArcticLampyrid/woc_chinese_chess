@@ -31,7 +31,7 @@ while (time() < $timer + DEFAULT_WAIT_TIME) {
     foreach($data[$id] as $index=>$datum)
         if ($datum['uid'] != $usr) {
             $response = new Message_Response($datum['message']);
-            unset($data[$index]);
+            unset($data[$id][$index]);
             $MESSAGE_FILE->save($data);
             break;
         }

@@ -1,16 +1,13 @@
 #include "mainui.h"
-
 #include "cell.h"
-
-#include <QHBoxLayout>
-#include <QLineEdit>
-#include <QPushButton>
 #include "network.h"
 #include "board.h"
 
 MainUI::MainUI() : QDialog(),
-    layout(new QVBoxLayout), boardLayout(new QGridLayout),
-    chu(new QLabel("楚河")), han(new QLabel("汉界"))
+    layout(new QHBoxLayout), boardLayout(new QGridLayout),
+    chu(new QLabel("楚河")), han(new QLabel("汉界")),
+    messageLabel(new QLabel("聊天信息：")), messageEdit(new QLineEdit),
+    sendMessageButton(new QPushButton("发送")), messageArea(new QScrollArea)
 {
     auto count = 0;
     for (auto& i : h) {
@@ -56,28 +53,40 @@ MainUI::MainUI() : QDialog(),
 
     layout->addLayout(boardLayout);
 
-    //Message Area UI:
-    /*
-    QLabel* message_area = new QLabel;
-    QHBoxLayout* send_area = new QHBoxLayout;
-    QLineEdit* text = new QLineEdit;
-    QPushButton* button = new QPushButton("发送");
-    send_area->addWidget(text);
-    text->setMinimumWidth(0.5 * width());
-    text->setMaximumWidth(0.7 * width());
-    send_area->addWidget(button, Qt::AlignRight);
-    button->setMaximumWidth(0.2 * width());
-    layout->addWidget(message_area);
-    layout->addLayout(send_area);
-    */
+    QHBoxLayout* sendArea = new QHBoxLayout;
+    sendArea->addWidget(messageEdit, 1);
+    sendArea->addWidget(sendMessageButton, 0, Qt::AlignRight);
+
+    messageArea->setWidget(messageLabel);
+    messageArea->setAlignment(Qt::AlignTop);
+    messageArea->setWidgetResizable(true);
+
+    QVBoxLayout* chatArea = new QVBoxLayout;
+    chatArea->addWidget(messageArea, 1);
+    chatArea->addLayout(sendArea);
+    layout->addLayout(chatArea);
+
+    connect(messageEdit, &QLineEdit::returnPressed, [this]{
+        sendMessageButton->click();
+    });
+    connect(sendMessageButton, &QPushButton::clicked, [this]{
+        QString msg = messageEdit->text();
+        messageLabel->setText(messageLabel->text().append(L"\n自己：").append(msg));
+        emit message(msg);
+        messageEdit->setText("");
+    });
 
     setLayout(layout);
-    //Add your own code here:
-    /////////////////////////
     connect(Network::getInstance(), &Network::findOK, this, &MainUI::onFind);
     connect(Network::getInstance(), &Network::move, Board::getBoard(), &Board::onMove);
     connect(Board::getBoard(), &Board::pieceMoved, Network::getInstance(), &Network::onMove);
     connect(this, &MainUI::setup, Board::getBoard(), &Board::onSetup);
 
-    /////////////////////////
+    connect(Network::getInstance(), &Network::message, this, &MainUI::onMessageReceived);
+    connect(this, &MainUI::message, Network::getInstance(), &Network::onMessageSent);
+}
+
+void MainUI::onMessageReceived(const QString msg)
+{
+    messageLabel->setText(messageLabel->text().append(L"\n对面：").append(msg));
 }
