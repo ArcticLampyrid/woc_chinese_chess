@@ -36,7 +36,7 @@ class Board : public QObject
 {
     Q_OBJECT
 
-    using Constructor = std::function<const Piece*(int, int, bool)>;    //工厂函数类型
+    using Constructor = std::function<std::shared_ptr<Piece>(int, int, bool)>;    //工厂函数类型
 public:
     //获取全局单例对象
     static inline const Board* getBoard() {
@@ -65,15 +65,13 @@ public:
         return SIDE;
     }
 private:
-    std::map<Pos, const Piece*> pieces;
+    std::map<Pos, std::shared_ptr<Piece>> pieces;
     std::map<Pos, Cell*> cells;
 
     Board();
     void setPieces(const std::map<Piece::PieceType, Constructor> &);
     void move(const Pos from, const Pos to);
     void judgeStatus(); //走棋后对局势评估（输赢和当前是否处于将军状态）
-public:
-    const std::list<std::pair<Pos, Piece::PieceType>> find(int x = -1, int y = -1, int side = -1) const;
 signals:
     void win(bool side);
     void pieceMoved(const Pos from, const Pos to);

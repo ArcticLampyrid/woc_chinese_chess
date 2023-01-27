@@ -4,12 +4,13 @@
 #include <cmath>
 #include <list>
 #include <map>
+#include <memory>
 
 #define RED_SIDE true
 #define BLACK_SIDE false
 
 using Pos = std::pair<int, int>;
-
+class Piece;
 class Piece {   //请不要继承QObject
 public:
     mutable int x, y;
@@ -51,17 +52,17 @@ public:
         return std::make_pair(x, y);
     }
 private:
-    bool noThreat(int x, int y) const;
-    virtual bool isBasicMove(int x, int y) const = 0;
+    bool noThreat(const std::map<Pos, std::shared_ptr<Piece>> &context, int x, int y) const;
+    virtual bool isBasicMove(const std::map<Pos, std::shared_ptr<Piece>> &context, int x, int y) const = 0;
 public:
-    virtual bool isValidMove(int x, int y) const {
-        if (isBasicMove(x, y) && noThreat(x, y))
-            return true;
+    bool isValidMove(const std::map<Pos, std::shared_ptr<Piece>> &context, int x, int y) const {
+        return isBasicMove(context, x, y) && noThreat(context, x, y);
     }
-    virtual const std::list<Pos> getPossibleMoves() const = 0;
+    virtual const std::list<Pos> getPossibleMoves(const std::map<Pos, std::shared_ptr<Piece>> &context) const = 0;
 
     Piece(int x, int y, PieceType type) : x(x), y(y), type(type) {}
     virtual ~Piece() {} //虚析构
+    friend class Algorithms;
 };
 
 inline Piece::PieceType removeSide(Piece::PieceType type) {

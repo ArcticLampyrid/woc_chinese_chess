@@ -1,4 +1,5 @@
 #include "piece.h"
+#include "algorithms.h"
 
 using Type = Piece::PieceType;
 
@@ -18,3 +19,8 @@ const std::map<Type, wchar_t> Piece::dict = {
     { Type::RED_BING, L'兵' },
     { Type::BLACK_ZU, L'卒' }
 };
+
+bool Piece::noThreat(const std::map<Pos, std::shared_ptr<Piece>> &context, int x, int y) const
+{
+    return Algorithms::noThreat(context, std::make_pair(this->x, this->y), std::make_pair(x, y), this->side());
+}

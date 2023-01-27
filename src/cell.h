@@ -39,7 +39,7 @@ public:
     const int x, y;
     Cell(int x, int y);
 
-    inline void change(Piece const* piece = nullptr) {
+    inline void change(std::shared_ptr<const Piece> piece = nullptr) {
         if (!piece) {
             setText("+");
             setForeground(Qt::black);

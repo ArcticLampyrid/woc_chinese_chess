@@ -2,6 +2,12 @@
 #include "algorithms.h"
 #include "network.h"
 #include "jiang_shuai_piece.h"
+#include "shi_piece.h"
+#include "xiang_piece.h"
+#include "ma_piece.h"
+#include "ju_piece.h"
+#include "pao_piece.h"
+#include "bing_zu_piece.h"
 
 using Type = Piece::PieceType;
 
@@ -14,32 +20,27 @@ Board::Board() {
 }
 
 void Board::judgeStatus() {
-    //checked = Algorithms::isCheck(side());
-    //if (Algorithms::isStalemate(side()))
-    //    return emit win(side());
-    //if (Algorithms::isStalemate(!side()))
-    //    return emit win(!side());
-    //Add your own code below
-    //////////////////////////
-
-    //////////////////////////
+    if (Algorithms::isStalemate(!side()))
+        return emit win(side());
+    if (Algorithms::isStalemate(side()))
+        return emit win(!side());
 }
 
 void Board::onSetup(Cell** cells) {
-    for (int i = 0; i < 12 * 9; i++) {
+    for (int i = 0; i < 10 * 9; i++) {
         auto& cell = cells[i];
         this->cells.emplace(std::piecewise_construct, std::tuple(cell->x, cell->y), std::tuple(cell));
         connect(cell, &Cell::click, this, &Board::onClick);
     }
     std::map<Type, Constructor> factory = {
         //请将nullptr替换为'new ClassName(x, y, side)'，请正确设置派生类构造函数参数
-        { Type::JIANG_SHUAI, [](int x, int y, bool side)->const Piece* { return new JiangShuaiPiece(x, y, side); } },
-        { Type::SHI, [](int x, int y, bool side)->const Piece* { return nullptr; } },
-        { Type::XIANG, [](int x, int y, bool side)->const Piece* { return nullptr; } },
-        { Type::MA, [](int x, int y, bool side)->const Piece* { return nullptr; } },
-        { Type::JU, [](int x, int y, bool side)->const Piece* { return nullptr; } },
-        { Type::PAO, [](int x, int y, bool side)->const Piece* { return nullptr; } },
-        { Type::BING_ZU, [](int x, int y, bool side)->const Piece* { return nullptr; } }
+        { Type::JIANG_SHUAI, [](int x, int y, bool side)->std::shared_ptr<Piece> { return std::make_shared<JiangShuaiPiece>(x, y, side); } },
+        { Type::SHI, [](int x, int y, bool side)->std::shared_ptr<Piece> { return std::make_shared<ShiPiece>(x, y, side); } },
+        { Type::XIANG, [](int x, int y, bool side)->std::shared_ptr<Piece> { return std::make_shared<XiangPiece>(x, y, side); } },
+        { Type::MA, [](int x, int y, bool side)->std::shared_ptr<Piece> { return std::make_shared<MaPiece>(x, y, side); } },
+        { Type::JU, [](int x, int y, bool side)->std::shared_ptr<Piece> { return std::make_shared<JuPiece>(x, y, side); } },
+        { Type::PAO, [](int x, int y, bool side)->std::shared_ptr<Piece> { return std::make_shared<PaoPiece>(x, y, side); } },
+        { Type::BING_ZU, [](int x, int y, bool side)->std::shared_ptr<Piece> { return std::make_shared<BingZuPiece>(x, y, side); } }
     };
     setPieces(factory);
     for (const auto& [pos, piece] : pieces)
@@ -101,14 +102,14 @@ void Board::move(const Pos from, const Pos to) {
     cell_from->change(nullptr);
     auto& cell_to = cells.at(to);
     cell_to->change(piece);
-    pieces.emplace(to, piece);
+    pieces.insert_or_assign(to, piece);
     pieces.erase(from);
     judgeStatus();
 }
 
 void Board::onClick(int x, int y) {
     std::lock_guard guard(lock);
-    static Piece const* selected = nullptr;
+    static std::weak_ptr<Piece> selected;
     if (!isYourTurn() || isMoved())
         return;
     const auto pos = std::make_pair(x, y);
@@ -120,16 +121,17 @@ void Board::onClick(int x, int y) {
             return;
         }
     }
-    if (!selected)
+    auto lockedSelected = selected.lock();
+    if (!lockedSelected)
         return;
-    if (selected->isValidMove(x, y)) {
+    if (lockedSelected->isValidMove(pieces, x, y)) {
         cells.at(pos)->fineMove();
-        auto originPos = selected->pos();
-        move(originPos, pos);
+        auto originPos = lockedSelected->pos();
         emit pieceMoved(originPos, pos);
+        move(originPos, pos);
         moved = true;
         your_turn = false;
-        selected = nullptr;
+        selected.reset();
     } else
         cells.at(pos)->wrongMove();
 }
@@ -139,9 +141,4 @@ void Board::onMove(const Pos from, const Pos to) {
     your_turn = true;
     moved = false;
     move(from, to);
-}
-
-const std::list<std::pair<Pos, Piece::PieceType>> Board::find(int x, int y, int side) const {
-    // FIXME
-    return std::list<std::pair<Pos, Piece::PieceType>>();
 }

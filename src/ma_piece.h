@@ -1,15 +1,15 @@
-#ifndef JIANGSHUAIPIECE_H
-#define JIANGSHUAIPIECE_H
+#ifndef MAPIECE_H
+#define MAPIECE_H
 
 #include "piece.h"
 
-class JiangShuaiPiece : public Piece
+class MaPiece : public Piece
 {
 private:
     virtual bool isBasicMove(const std::map<Pos, std::shared_ptr<Piece>> &context, int x, int y) const;
 public:
     virtual const std::list<Pos> getPossibleMoves(const std::map<Pos, std::shared_ptr<Piece>> &context) const;
-    JiangShuaiPiece(int x, int y, bool side);
+    MaPiece(int x, int y, bool side);
 };
 
-#endif // JIANGSHUAIPIECE_H
+#endif // MAPIECE_H
