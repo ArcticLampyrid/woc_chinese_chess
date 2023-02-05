@@ -27,9 +27,8 @@ private:
 private slots:
     void fade() {
         if (text() == "+")
-            setBackground(Qt::white);
-        else
-            setBackground(Qt::lightGray);
+            setForeground(Qt::black);
+        setBackground(Qt::white);
     }
     void onClicked()
     {
@@ -42,7 +41,6 @@ public:
     inline void change(std::shared_ptr<const Piece> piece = nullptr) {
         if (!piece) {
             setText("+");
-            setForeground(Qt::black);
             fade();
             return;
         }
