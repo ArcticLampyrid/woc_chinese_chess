@@ -71,7 +71,7 @@ MainUI::MainUI() : QDialog(),
     });
     connect(sendMessageButton, &QPushButton::clicked, [this]{
         QString msg = messageEdit->text();
-        messageLabel->setText(messageLabel->text().append(L"\n自己：").append(msg));
+        messageLabel->setText(messageLabel->text().append(QT_UNICODE_LITERAL("\n自己：")).append(msg));
         emit message(msg);
         messageEdit->setText("");
     });
@@ -88,5 +88,5 @@ MainUI::MainUI() : QDialog(),
 
 void MainUI::onMessageReceived(const QString msg)
 {
-    messageLabel->setText(messageLabel->text().append(L"\n对面：").append(msg));
+    messageLabel->setText(messageLabel->text().append(QT_UNICODE_LITERAL("\n对面：")).append(msg));
 }
