@@ -98,7 +98,7 @@ void Network::onResponse(QNetworkReply* reply) {
             break;
         }
         ////////////////////////
-        if (code == 201)    //长轮询
+        if (code / 100 == 2)    //长轮询
             send(setRequest(RequestType::CONTINUE, QString("?time=%1").arg(count++)));
     } catch (Exception e) {
         e.process();
