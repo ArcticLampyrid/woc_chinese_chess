@@ -23,7 +23,7 @@ jobs:
       uses: jurplel/install-qt-action@v3
       with:
         version: '6.3.2'
-        archives: qtbase ${{ matrix.os.startsWith("ubuntu-") && "icu" || ""}}
+        archives: qtbase ${{ startsWith(matrix.os, "ubuntu-") && "icu" || ""}}
         cache: 'true'
         cache-key-prefix: 'install-qt-action'
 
