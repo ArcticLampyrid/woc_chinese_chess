@@ -40,4 +40,4 @@ jobs:
       
     - name: View build folder
       shell: pwsh
-      run: Get-ChildItem -Path ${{github.workspace}}/src -Recurse -ErrorAction SilentlyContinue -Force | Resolve-Path -Relative| %{$_.replace('\', '/')}
+      run: Get-ChildItem -Path ${{github.workspace}}/build -Recurse -ErrorAction SilentlyContinue -Force | Resolve-Path -Relative| %{$_.replace('\', '/')}
