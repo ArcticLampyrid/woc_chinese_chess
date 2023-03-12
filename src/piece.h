@@ -33,12 +33,12 @@ public:
         RED_BING    = 7,    BLACK_ZU        = -7
     } type;
 private:
-    static const std::map<PieceType, wchar_t> dict;
+    static const std::map<PieceType, char16_t> dict;
 public:
-    static inline wchar_t convert(PieceType type) {
+    static inline char16_t convert(PieceType type) {
         return dict.at(type);
     }
-    inline wchar_t text() const {
+    inline char16_t text() const {
         return convert(type);
     }
     inline void move(int x, int y) const {  //请勿修改

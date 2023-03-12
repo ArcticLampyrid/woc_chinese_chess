@@ -3,7 +3,7 @@
 
 using Type = Piece::PieceType;
 
-const std::map<Type, wchar_t> Piece::dict = {
+const std::map<Type, char16_t> Piece::dict = {
     { Type::RED_SHUAI, L'帥' },
     { Type::BLACK_JIANG, L'將' },
     { Type::RED_SHI, L'仕' },
